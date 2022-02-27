@@ -1,13 +1,16 @@
 import pymongo
-import json
+import os
+from dotenv import load_dotenv
 import certifi
 ca = certifi.where()
 
-import time
+load_dotenv()
+
+db_uri = os.getenv('DB_URI')
 
 def connectMongo():
     try:
-        mongo = pymongo.MongoClient(f"mongodb+srv://brady:Kristi0866@cluster0.qamfk.mongodb.net/TwitterBot?retryWrites=true&w=majority", tlsCAFile=ca)
+        mongo = pymongo.MongoClient(db_uri, tlsCAFile=ca)
         db = mongo.get_database('TwitterBot')
         tweets = db.get_collection('tweets')
         return tweets
