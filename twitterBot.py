@@ -21,21 +21,96 @@ try:
     )
 except Exception as err:
     print(err)
-        
-try:
-    unclebeedy = client.get_user(username="unclebeedy", user_auth=True)
-    unclebeedy_id = unclebeedy[0].id
-except:
-    print("Unable to find user")
 
-tweet = client.create_tweet(text="This is a test tweet sent FROM the twitter API v2", user_auth=True)
-print('tweet sent')
-tweet_id = tweet[0].get('id')
-print(f'tweet id: {tweet_id}')
-print("waiting 30 seconds")
-time.sleep(30)
-client.delete_tweet(id=tweet_id, user_auth=True)
-print("tweet deleted")
+# user fetch
+while True:
+    while True:
+        try:
+            msg = input("Would you like to fetch a user? (Y/n): ").lower()
+            if msg == 'y' or msg == 'n':
+                break
+            else:
+                raise Exception
+        except Exception:
+            print("Please enter y or n")
+        except KeyboardInterrupt:
+            print("KeyboardInterrupt")
+            quit()
+
+    if msg == 'y':
+        while True:
+            try:
+                username = input("Enter the username of the user you wish to fetch: ")
+                try:
+                    user = client.get_user(username=username, user_auth=True)
+                    user_id = user[0].id
+                    break
+                except KeyboardInterrupt:
+                    quit()
+                except:
+                    print("Unable to find user")
+                    while True:
+                        try:
+                            msg = input("Continue? (Y/n): ").lower()
+                            if msg != 'n' or msg != 'y':
+                                raise
+                            if msg == 'n':
+                                break
+                        except KeyboardInterrupt:
+                            quit()
+                        except:
+                            print("Enter 'y' or 'n'")
+            except KeyboardInterrupt:
+                quit()
+            except:
+                print("Invalid entry")
+            
+        
+    elif msg == 'n':
+        break
+
+# tweet send
+while True:
+    try:
+        msg = input("Would you like to send a tweet? (Y/n): ").lower()
+        if msg == 'y' or msg == 'n':
+            break
+        else:
+            raise
+    except KeyboardInterrupt:
+        quit()
+    except:
+        print("Please enter 'y' or 'n'")
+
+if msg == 'y':
+    while True:
+        try:
+            tweet_content = input("Enter the text that you want to tweet: ")
+            break
+        except KeyboardInterrupt:
+            quit()
+        except Exception as err:
+            print(err)
+        
+    tweet = client.create_tweet(text=tweet_content, user_auth=True)
+    print('tweet sent')
+    tweet_id = tweet[0].get('id')
+    
+    while True:
+        try:
+            msg = input("Would you like to delete the tweet? (Y/n): ").lower()
+            if msg == 'y' or msg == 'n':
+                break
+            else:
+                raise
+        except KeyboardInterrupt:
+            quit()
+        except:
+            print("Please enter 'y' or 'n'")
+    
+    if msg == 'y':
+        client.delete_tweet(id=tweet_id, user_auth=True)
+        print("tweet deleted")
 # public_tweets = client.get_users_tweets(id=unclebeedy_id, user_auth=True)
 # for tweet in public_tweets[0]:
 #     print(tweet)
