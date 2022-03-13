@@ -1,10 +1,10 @@
 import PySimpleGUI as sg
-from twitterBot import *
-from database import *
+import twitterBot as bot
+import database as db
 
 sg.theme('Dark Blue 3')
 
-tweet_list = getTweets()
+tweet_list = db.getTweets()
 
 layout = [[sg.Text('Enter a tweet to send'), sg.Text(size=(12,1))],
           [sg.Input(key='-IN-')],
@@ -23,18 +23,18 @@ while True:  # Event Loop
         break
     if event == 'Tweet':
         tweet = values['-IN-']
-        tweet_id, message = create_tweet(tweet)
+        tweet_id, message = bot.create_tweet(tweet)
         window['-OUTPUT-'].update(message)
-        tweet_list = getTweets()
+        tweet_list = db.getTweets()
         window['-TWEET-'].update(tweet_list)
     if event == 'Delete':
         tweet = values['-IN-']
-        message = delete_tweet(tweet)
+        message = bot.delete_tweet(tweet)
         window['-OUTPUT-'].update(message)
-        tweet_list = getTweets()
+        tweet_list = db.getTweets()
         window['-TWEET-'].update(tweet_list)
     if event == 'Refresh':
-        tweet_list = getTweets()
+        tweet_list = db.getTweets()
         window['-TWEET-'].update(tweet_list)
 
 window.close()
